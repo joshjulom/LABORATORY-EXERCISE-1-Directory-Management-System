@@ -30,3 +30,22 @@ void createDirectory(const string& path) {
         cout << "Error: Could not create directory. It may already exist or another error occurred." << endl;
     }
 }
+
+void changeDirectory(string& currentPath, const string& newPath) {
+    cout << "Changing directory to: " << newPath << endl;
+    if (_chdir(newPath.c_str()) == 0) {
+        currentPath = newPath;
+        cout << "Current working directory: " << currentPath << endl;
+    } else {
+        cout << "Error: Could not change directory." << endl;
+    }
+}
+
+void showMenu() {
+    cout << "\nMenu:\n";
+    cout << "1. List Files\n";
+    cout << "2. Create Directory\n";
+    cout << "3. Change Directory\n";
+    cout << "4. Exit\n";
+    cout << "Enter your choice: ";
+}
