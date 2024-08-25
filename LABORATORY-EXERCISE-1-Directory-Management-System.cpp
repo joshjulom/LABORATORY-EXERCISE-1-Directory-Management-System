@@ -1,31 +1,32 @@
 #include <iostream>
-#include <filesystem>
-#include <fstream>
 #include <string>
+#include <windows.h>
+#include <direct.h>
 
-namespace fs = std::filesystem;
 using namespace std;
 
 void listFiles(const string& path) {
-    cout << "Listing files in Directory: " << path << endl;
-    try {
-        for (const auto& entry : fs::directory_iterator(path)) {
-            cout << entry.path().filename().string() << endl;
-        }
-    } catch (const fs::filesystem_error& e) {
-        cout << "Error: " << e.what() << endl;
+    cout << "Listing files in directory: " << path << endl;
+    WIN32_FIND_DATA findFileData;
+    HANDLE hFind = FindFirstFile((path + "/*").c_str(), &findFileData);
+
+    if (hFind == INVALID_HANDLE_VALUE) {
+        cout << "Error: Could not open directory." << endl;
+        return;
     }
+
+    do {
+        cout << findFileData.cFileName << endl;
+    } while (FindNextFile(hFind, &findFileData) != 0);
+
+    FindClose(hFind);
 }
 
 void createDirectory(const string& path) {
-    cout << "Creating Directory: " << path << endl;
-    try {
-        if (fs::create_directory(path)) {
-            cout << "Directory created successfully." << endl;
-        } else {
-            cout << "Failed to create directory. It may already exist." << endl;
-        }
-    } catch (const fs::filesystem_error& e) {
-        cout << "Error: " << e.what() << endl;
+    cout << "Creating directory: " << path << endl;
+    if (_mkdir(path.c_str()) == 0) {
+        cout << "Directory created successfully." << endl;
+    } else {
+        cout << "Error: Could not create directory. It may already exist or another error occurred." << endl;
     }
 }
