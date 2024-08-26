@@ -49,3 +49,50 @@ void showMenu() {
     cout << "4. Exit\n";
     cout << "Enter your choice: ";
 }
+
+int main() {
+    char cwd[1024];
+    if (!_getcwd(cwd, sizeof(cwd))) {
+        cout << "Error: Could not get current working directory." << endl;
+        return 1;
+    }
+    string currentPath = cwd;
+    int choice;
+
+    do {
+        showMenu();
+        cin >> choice;
+
+        switch (choice) {
+        case 1: {
+            listFiles(currentPath);
+            break;
+        }
+        case 2: {
+            string newDir;
+            cout << "Enter the name of the new directory: ";
+            cin >> newDir;
+            createDirectory(currentPath + "\\" + newDir);
+            break;
+        }
+        case 3: {
+            string newPath;
+            cout << "Enter the path to change to: ";
+            cin >> newPath;
+            changeDirectory(currentPath, newPath);
+            break;
+        }
+        case 4: {
+            cout << "Exiting..." << endl;
+            break;
+        }
+        default: {
+            cout << "Invalid choice. Please try again." << endl;
+            break;
+        }
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
